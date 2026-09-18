@@ -1,0 +1,89 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+
+#include <nxp/mcx/nxp_mcxn23x.dtsi>
+
+/ {
+    model = "NXP MCXN236 Custom Board";
+    compatible = "nxp,mcxn236", "nxp,mcx";
+
+    chosen {
+        zephyr,sram = &sram0;
+        zephyr,flash = &flash;
+        zephyr,flash-controller = &fmu;
+        zephyr,code-partition = &slot0_partition;
+        zephyr,console = &flexcomm4_lpuart4;
+        zephyr,shell-uart = &flexcomm4_lpuart4;
+    };
+
+    aliases {
+        led0 = &red_led;
+    };
+
+    leds {
+        compatible = "gpio-leds";
+
+        red_led: led_0 {
+            gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
+            label = "Red LED";
+        };
+    };
+};
+
+&sram0 {
+    compatible = "mmio-sram";
+    reg = <0x20000000 DT_SIZE_K(192)>;
+};
+
+&gpio4 {
+    status = "okay";
+};
+
+&flexcomm4 {
+    status = "okay";
+};
+
+&flexcomm4_lpuart4 {
+    status = "okay";
+    current-speed = <115200>;
+};
+
+&os_timer {
+    status = "okay";
+};
+
+
+&red_led {
+    status = "okay";
+};
+
+&flash {
+    partitions {
+        compatible = "fixed-partitions";
+        #address-cells = <1>;
+        #size-cells = <1>;
+
+        boot_partition: partition@0 {
+            label = "mcuboot";
+            reg = <0x00000000 DT_SIZE_K(80)>;
+        };
+
+        slot0_partition: partition@14000 {
+            label = "image-0";
+            reg = <0x00014000 DT_SIZE_K(440)>;
+        };
+
+        slot1_partition: partition@84000 {
+            label = "image-1";
+            reg = <0x0084000 DT_SIZE_K(440)>;
+        };
+
+        storage_partition: partition@f0000 {
+            label = "storage";
+            reg = <0x000f0000 DT_SIZE_K(64)>;
+        };
+    };
+};

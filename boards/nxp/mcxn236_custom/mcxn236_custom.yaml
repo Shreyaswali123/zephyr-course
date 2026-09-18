@@ -1,0 +1,24 @@
+identifier: mcxn236_custom
+name: NXP MCXN236 Custom Board
+type: mcu
+arch: arm
+ram: 192
+flash: 1024
+toolchain:
+  - zephyr
+  - gnuarmemb
+vendor: nxp
+supported:
+  - adc
+  - can
+  - counter
+  - dma
+  - entropy
+  - flash
+  - gpio
+  - i2c
+  - pwm
+  - spi
+  - usbd
+  - watchdog
+  - crc

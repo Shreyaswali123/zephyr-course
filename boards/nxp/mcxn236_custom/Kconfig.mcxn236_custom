@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_MCXN236_CUSTOM
+    select SOC_MCXN236
+    select SOC_PART_NUMBER_MCXN236VDF
+    select MCUX_OS_TIMER
