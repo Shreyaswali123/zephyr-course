@@ -5,6 +5,7 @@
 /dts-v1/;
 
 #include <nxp/mcx/nxp_mcxn23x.dtsi>
+#include "mcxn236_custom-pinctrl.dtsi"
 
 / {
     model = "NXP MCXN236 Custom Board";
@@ -31,6 +32,12 @@
             label = "Red LED";
         };
     };
+
+    led_sensor: led_sensor {
+        compatible = "zephyr,led-sensor";
+        gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
+        status = "okay";
+    };
 };
 
 &sram0 {
@@ -49,12 +56,13 @@
 &flexcomm4_lpuart4 {
     status = "okay";
     current-speed = <115200>;
+    pinctrl-0 = <&pinmux_flexcomm4_lpuart>;
+    pinctrl-names = "default";
 };
 
 &os_timer {
     status = "okay";
 };
-
 
 &red_led {
     status = "okay";
@@ -87,3 +95,4 @@
         };
     };
 };
+

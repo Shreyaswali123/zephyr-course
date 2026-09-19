@@ -1,0 +1,9 @@
+description: Simple LED sensor driver
+
+compatible: "zephyr,led-sensor"
+
+properties:
+  gpios:
+    type: phandle-array
+    required: true
+    description: GPIO controlling the LED

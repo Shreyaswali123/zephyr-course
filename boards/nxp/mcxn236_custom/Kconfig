@@ -1,1 +1,4 @@
 # SPDX-License-Identifier: Apache-2.0
+
+config BOARD_MCXN236_CUSTOM
+    select BOARD_EARLY_INIT_HOOK
