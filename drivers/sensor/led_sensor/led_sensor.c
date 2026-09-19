@@ -21,6 +21,20 @@ struct led_sensor_data {
     struct sensor_value value;
 };
 
+int led_sensor_set_value(const struct device *dev, int value)
+{
+    if (dev == NULL) {
+        return -EINVAL;
+    }
+
+    struct led_sensor_data *data = dev->data;
+
+    data->value.val1 = value;
+    data->value.val2 = 0;
+
+    return 0;
+}
+
 static int led_sensor_sample_fetch(const struct device *dev,
                                    enum sensor_channel chan)
 {
