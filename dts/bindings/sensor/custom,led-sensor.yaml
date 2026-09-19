@@ -1,9 +1,0 @@
-description: Simple LED sensor driver
-
-compatible: "custom,led-sensor"
-
-properties:
-  gpios:
-    type: phandle-array
-    required: true
-    description: GPIO controlling the LED
