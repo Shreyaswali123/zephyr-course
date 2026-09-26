@@ -4,8 +4,12 @@
 #include <zephyr/sys/printk.h>
 #include <zephyr/shell/shell.h>
 #include "led_sensor.h"
+#include <stdlib.h>
 
 #define LED_SENSOR_NODE DT_NODELABEL(led_sensor)
+
+#define LED_SENSOR_VALUE_MIN 0
+#define LED_SENSOR_VALUE_MAX 100
 
 static const struct device *sensor = DEVICE_DT_GET(LED_SENSOR_NODE);
 
@@ -67,18 +71,59 @@ static int cmd_sensor_info(const struct shell *shell,
     return 0;
 }
 
+static int cmd_sensor_set(const struct shell *shell,
+                          size_t argc, char **argv);
 
 /* sensor root command */
 SHELL_STATIC_SUBCMD_SET_CREATE(sensor_subcmds,
     SHELL_CMD(fetch, NULL, "Fetch sensor sample", cmd_sensor_fetch),
     SHELL_CMD(read, NULL, "Read LED sensor value", cmd_sensor_read),
     SHELL_CMD(info, NULL, "Show sensor information", cmd_sensor_info),
+    SHELL_CMD_ARG(set, NULL, "Set sensor value", cmd_sensor_set, 2, 0),
     SHELL_SUBCMD_SET_END
 );
 
 SHELL_CMD_REGISTER(sensor, &sensor_subcmds,
                    "LED sensor commands", NULL);
+/* sensor set command */
+static int cmd_sensor_set(const struct shell *shell,
+                          size_t argc, char **argv)
+{
+    ARG_UNUSED(argc);
 
+    if (argc < 2) {
+        shell_error(shell, "Missing value");
+        return -EINVAL;
+    }
+
+    char *endptr;
+    long value = strtol(argv[1], &endptr, 10);
+
+    if (*endptr != '\0') {
+        shell_error(shell, "Invalid value: %s", argv[1]);
+        return -EINVAL;
+    }
+
+    if (value < LED_SENSOR_VALUE_MIN ||
+        value > LED_SENSOR_VALUE_MAX) {
+        shell_error(shell,
+                    "Value must be between %d and %d",
+                    LED_SENSOR_VALUE_MIN,
+                    LED_SENSOR_VALUE_MAX);
+        return -EINVAL;
+    }
+
+    int ret = led_sensor_set_value(sensor, (int)value);
+
+    if (ret < 0) {
+        shell_error(shell, "led_sensor_set_value() failed: %d", ret);
+        return ret;
+    }
+
+    shell_print(shell, "Sensor value set to %ld", value);
+
+    return 0;
+}
 
 int main(void)
 {
