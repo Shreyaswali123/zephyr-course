@@ -65,6 +65,12 @@
 		};
 	};
 
+	led_sensor: led_sensor {
+        compatible = "zephyr,led-sensor";
+        gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
+        status = "okay";
+};
+
 	gpio_keys {
 		compatible = "gpio-keys";
 
